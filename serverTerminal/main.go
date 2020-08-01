@@ -1,9 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"websocket/server"
 )
 
 func main() {
-	server.SetupListener("tcp", "localhost:49152")
+	listener := server.SetupListener("tcp", "localhost:49152")
+	connectionWithClient := server.SetupConnection(listener)
+	fmt.Println(connectionWithClient)
 }

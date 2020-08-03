@@ -57,6 +57,7 @@ func SetupReaderAndWriter(connectionWithServer net.Conn) {
 	go writeMessageToServer(connectionWithServer)
 	wg.Add(1)
 	go acceptMessageFromServer(connectionWithServer)
+	log.Println("You can now start communication")
 	wg.Wait()
 
 }

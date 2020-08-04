@@ -20,8 +20,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e66f1097-6d5d-4652-a1ae-aa1bfc06bd2a" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/client/gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Server_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Server_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,6 +109,10 @@
     </option>
   </component>
   <component name="WindowStateProjectService">
+    <state x="616" y="345" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1596517958109">
+      <screen x="0" y="23" width="1792" height="1033" />
+    </state>
+    <state x="616" y="345" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1792.1033@0.23.1792.1033" timestamp="1596517958109" />
     <state width="1750" height="280" key="GridCell.Tab.0.bottom" timestamp="1596512940129">
       <screen x="0" y="23" width="1792" height="1034" />
     </state>

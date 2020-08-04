@@ -9,8 +9,6 @@ import (
 )
 
 
-
-
 func TestMsgFromClientToServer(t *testing.T) {
 
 	message := "Message from client to server checked successfully\n"

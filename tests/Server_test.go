@@ -3,25 +3,21 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"net"
 	"testing"
+	"websocket/client"
+	"websocket/server"
 )
+
+
+
 
 func TestMsgFromClientToServer(t *testing.T) {
 
 	message := "Message from client to server checked successfully\n"
-	listener, listenerError := net.Listen("tcp", "localhost:49152")
-	if listenerError != nil {
-		t.Fatal(listenerError)
-	}
-	connectionWithServer, connectionWithServerError := net.Dial("tcp", "localhost:49152")
-	if connectionWithServerError != nil {
-		t.Fatal(connectionWithServerError)
-	}
-	connectionWithClient, connectionWithClientError := listener.Accept()
-	if connectionWithClientError != nil {
-		return
-	}
+	listener := server.SetupListener("tcp", "localhost:49152")
+
+	connectionWithServer := client.DialServer("tcp", "localhost:49152")
+	connectionWithClient := server.SetupConnection(listener)
 
 	connectionWithServer.Write([]byte(message))
 
@@ -41,18 +37,10 @@ func TestMsgFromServerToClient(t *testing.T) {
 
 	message := "Message from  server to client checked successfully\n"
 
-	listener, listenerError := net.Listen("tcp", "localhost:49152")
-	if listenerError != nil {
-		t.Fatal(listenerError)
-	}
-	connectionWithServer, connectionWithServerError := net.Dial("tcp", "localhost:49152")
-	if connectionWithServerError != nil {
-		t.Fatal(connectionWithServerError)
-	}
-	connectionWithClient, connectionWithClientError := listener.Accept()
-	if connectionWithClientError != nil {
-		return
-	}
+	listener := server.SetupListener("tcp", "localhost:49152")
+
+	connectionWithServer := client.DialServer("tcp", "localhost:49152")
+	connectionWithClient := server.SetupConnection(listener)
 
 	connectionWithClient.Write([]byte(message))
 

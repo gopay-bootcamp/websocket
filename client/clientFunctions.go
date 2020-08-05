@@ -12,13 +12,14 @@ import (
 
 var wg = sync.WaitGroup{}
 
-func DialServer(network, address string) net.Conn {
+func DialServer(network, address string) (net.Conn,error) {
 	connectionWithServer, connectionWithServerErr := net.Dial(network, address)
 	if connectionWithServerErr != nil {
-		log.Fatal(connectionWithServerErr)
+		log.Print(connectionWithServerErr)
+		return connectionWithServer,connectionWithServerErr
 	}
 	log.Printf("Establishing connection with server at network address: %v", connectionWithServer.RemoteAddr())
-	return connectionWithServer
+	return connectionWithServer,connectionWithServerErr
 }
 
 func writeMessageToServer(connectionWithServer net.Conn) {

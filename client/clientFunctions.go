@@ -12,14 +12,15 @@ import (
 
 var wg = sync.WaitGroup{}
 
-func DialServer(network, address string) (net.Conn,error) {
+//DialServer calls the net.Dial() function and prints the appropraite log messages
+func DialServer(network, address string) (net.Conn, error) {
 	connectionWithServer, connectionWithServerErr := net.Dial(network, address)
 	if connectionWithServerErr != nil {
 		log.Print(connectionWithServerErr)
-		return connectionWithServer,connectionWithServerErr
+		return connectionWithServer, connectionWithServerErr
 	}
 	log.Printf("Establishing connection with server at network address: %v", connectionWithServer.RemoteAddr())
-	return connectionWithServer,connectionWithServerErr
+	return connectionWithServer, connectionWithServerErr
 }
 
 func writeMessageToServer(connectionWithServer net.Conn) {
@@ -53,6 +54,8 @@ func acceptMessageFromServer(connectionWithServer net.Conn) {
 		fmt.Print("From server-> " + dataFromServer)
 	}
 }
+
+//SetupReaderAndWriter runs the reader and write goroutines simultaneously
 func SetupReaderAndWriter(connectionWithServer net.Conn) {
 	wg.Add(1)
 	go writeMessageToServer(connectionWithServer)

@@ -5,8 +5,12 @@ import (
 )
 
 func main() {
-	listener := server.SetupListener("tcp", "localhost:49152")
-	connectionWithClient := server.SetupConnection(listener)
-	defer connectionWithClient.Close()
-	server.SetupReaderAndWriter(connectionWithClient)
+	listener, listenerErr := server.SetupListener("tcp", "localhost:49152")
+	if listenerErr == nil {
+		connectionWithClient, connectionWithClientErr := server.SetupConnection(listener)
+		if connectionWithClientErr == nil {
+			defer connectionWithClient.Close()
+			server.SetupReaderAndWriter(connectionWithClient)
+		}
+	}
 }

@@ -12,23 +12,27 @@ import (
 
 var wg = sync.WaitGroup{}
 
-func SetupListener(network, address string) net.Listener {
+//SetupListener calls the net.listen function and prints the appropriate log messages
+func SetupListener(network, address string) (net.Listener, error) {
 	listener, listenerErr := net.Listen(network, address)
 	if listenerErr != nil {
-		log.Fatal(listenerErr)
+		log.Print(listenerErr)
+		return listener, listenerErr
 	}
 	log.Printf("Server is listening at network address: %v\n", listener.Addr())
-	return listener
+	return listener, listenerErr
 }
 
-func SetupConnection(clientListener net.Listener) net.Conn {
+//SetupConnection calls the net.listener.Accept() function and prints the appropraite log messages
+func SetupConnection(clientListener net.Listener) (net.Conn, error) {
 	log.Println("Waiting for client to dial...")
 	connectionWithClient, connectionWithClientErr := clientListener.Accept()
 	if connectionWithClientErr != nil {
-		log.Fatal(connectionWithClientErr)
+		log.Print(connectionWithClientErr)
+		return connectionWithClient, connectionWithClientErr
 	}
 	log.Printf("Establishing connection with client at network address: %v", connectionWithClient.RemoteAddr())
-	return connectionWithClient
+	return connectionWithClient, connectionWithClientErr
 }
 func acceptMessageFromClient(connectionWithClient net.Conn) {
 	for {
@@ -62,6 +66,8 @@ func writeMessageToClient(connectionWithClient net.Conn) {
 
 	}
 }
+
+//SetupReaderAndWriter runs the reader and write goroutines simultaneously
 func SetupReaderAndWriter(connectionWithClient net.Conn) {
 	wg.Add(1)
 	go acceptMessageFromClient(connectionWithClient)

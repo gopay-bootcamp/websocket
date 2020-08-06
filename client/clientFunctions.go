@@ -28,9 +28,16 @@ func writeMessageToServer(connectionWithServer net.Conn) {
 		reader := bufio.NewReader(os.Stdin)
 		dataForServer, dataForServerError := reader.ReadString('\n')
 		if dataForServerError != nil {
-			log.Fatal(dataForServerError)
+			log.Println(dataForServerError)
+			wg.Done()
+			return
 		}
-		fmt.Fprintf(connectionWithServer, dataForServer+"\n")
+		_, err := fmt.Fprintf(connectionWithServer, dataForServer+"\n")
+		if err != nil {
+			log.Println(err)
+			wg.Done()
+			return
+		}
 		if strings.TrimSpace(string(dataForServer)) == "STOP" {
 			log.Println("Client cannot send messages to server now")
 			wg.Done()
@@ -44,14 +51,16 @@ func acceptMessageFromServer(connectionWithServer net.Conn) {
 		reader := bufio.NewReader(connectionWithServer)
 		dataFromServer, dataFromServerError := reader.ReadString('\n')
 		if dataFromServerError != nil {
-			log.Fatal(dataFromServerError)
+			log.Println(dataFromServerError)
+			wg.Done()
+			return
 		}
 		if strings.TrimSpace(string(dataFromServer)) == "STOP" {
 			log.Println("Client cannot receive messages from server now")
 			wg.Done()
 			return
 		}
-		fmt.Print("From server-> " + dataFromServer)
+		fmt.Printf("From server-> %s", dataFromServer)
 	}
 }
 

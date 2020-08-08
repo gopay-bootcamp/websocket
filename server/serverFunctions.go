@@ -11,6 +11,7 @@ import (
 )
 
 var wg = sync.WaitGroup{}
+var ConnectionsMap = make(map[net.Addr]net.Conn)
 
 //SetupListener calls the net.listen function and prints the appropriate log messages
 func SetupListener(network, address string) (net.Listener, error) {
@@ -31,6 +32,8 @@ func SetupConnection(clientListener net.Listener) (net.Conn, error) {
 		log.Print(connectionWithClientErr)
 		return connectionWithClient, connectionWithClientErr
 	}
+	ConnectionsMap[connectionWithClient.RemoteAddr()] = connectionWithClient
+	fmt.Println("Conncetions map:", ConnectionsMap)
 	log.Printf("Establishing connection with client at network address: %v", connectionWithClient.RemoteAddr())
 	return connectionWithClient, connectionWithClientErr
 }
@@ -39,7 +42,7 @@ func acceptMessageFromClient(connectionWithClient net.Conn) {
 		reader := bufio.NewReader(connectionWithClient)
 		dataFromClient, dataFromClientError := reader.ReadString('\n')
 		if dataFromClientError != nil {
-			log.Println(dataFromClientError)
+			log.Printf("Deleting client@%v from map because of %v", connectionWithClient.RemoteAddr(), dataFromClientError)
 			wg.Done()
 			return
 		}
@@ -61,11 +64,16 @@ func writeMessageToClient(connectionWithClient net.Conn) {
 			wg.Done()
 			return
 		}
-		_, err := connectionWithClient.Write([]byte(dataForClient))
-		if err != nil {
-			log.Println(err)
-			wg.Done()
-			return
+		for clientAddress := range ConnectionsMap {
+			//fmt.Println("Capital of",country,"is",countryCapitalMap[country])
+			connectionWithClient := ConnectionsMap[clientAddress]
+			_, err := connectionWithClient.Write([]byte(dataForClient))
+			if err != nil {
+				delete(ConnectionsMap, connectionWithClient.RemoteAddr())
+				log.Printf("Deleting client@%v from map because of %v", clientAddress, err)
+				wg.Done()
+				return
+			}
 		}
 		if strings.TrimSpace(string(dataForClient)) == "STOP" {
 			log.Println("Server cannot send messages to client now")

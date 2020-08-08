@@ -46,8 +46,10 @@ func acceptMessageFromClient(connectionWithClient net.Conn) {
 			wg.Done()
 			return
 		}
-		if strings.TrimSpace(string(dataFromClient)) == "STOP" {
-			log.Println("Server cannot accept messages from client now")
+		if strings.TrimSpace(string(dataFromClient)) == "STOP CLIENT" {
+			delete(ConnectionsMap, connectionWithClient.RemoteAddr())
+			log.Println("Received STOP CLIENT command from", connectionWithClient.RemoteAddr())
+			log.Printf("Deleting client@%v from connections map", connectionWithClient.RemoteAddr())
 			wg.Done()
 			return
 		}

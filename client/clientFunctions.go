@@ -36,6 +36,7 @@ func writeMessageToServer(connectionWithServer net.Conn) {
 		if err != nil {
 			log.Println(err)
 			wg.Done()
+			wg.Done()
 			return
 		}
 		if strings.TrimSpace(string(dataForServer)) == "STOP" {
@@ -53,12 +54,12 @@ func acceptMessageFromServer(connectionWithServer net.Conn) {
 		if dataFromServerError != nil {
 			log.Println(dataFromServerError)
 			wg.Done()
-			return
-		}
-		if strings.TrimSpace(string(dataFromServer)) == "STOP" {
-			log.Println("Client cannot receive messages from server now")
 			wg.Done()
 			return
+		}
+		if strings.TrimSpace(string(dataFromServer)) == "STOP SERVER" {
+			log.Println("Stopping client because server has stopped")
+			os.Exit(0)
 		}
 		fmt.Printf("From server-> %s", dataFromServer)
 	}

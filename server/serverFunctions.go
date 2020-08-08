@@ -75,10 +75,9 @@ func writeMessageToClient(connectionWithClient net.Conn) {
 				return
 			}
 		}
-		if strings.TrimSpace(string(dataForClient)) == "STOP" {
-			log.Println("Server cannot send messages to client now")
-			wg.Done()
-			return
+		if strings.TrimSpace(string(dataForClient)) == "STOP SERVER" {
+			log.Println("Stopping server...")
+			os.Exit(0)
 		}
 
 	}

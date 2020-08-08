@@ -42,6 +42,7 @@ func acceptMessageFromClient(connectionWithClient net.Conn) {
 		reader := bufio.NewReader(connectionWithClient)
 		dataFromClient, dataFromClientError := reader.ReadString('\n')
 		if dataFromClientError != nil {
+			delete(ConnectionsMap, connectionWithClient.RemoteAddr())
 			log.Printf("Deleting client@%v from map because of %v", connectionWithClient.RemoteAddr(), dataFromClientError)
 			wg.Done()
 			return

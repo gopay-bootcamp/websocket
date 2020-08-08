@@ -48,7 +48,7 @@ func acceptMessageFromClient(connectionWithClient net.Conn) {
 			wg.Done()
 			return
 		}
-		fmt.Printf("From client-> %s", string(dataFromClient))
+		fmt.Printf("From client@%v-> %s", connectionWithClient.RemoteAddr(), string(dataFromClient))
 	}
 
 }
@@ -82,7 +82,7 @@ func SetupReaderAndWriter(connectionWithClient net.Conn) {
 	go acceptMessageFromClient(connectionWithClient)
 	wg.Add(1)
 	go writeMessageToClient(connectionWithClient)
-	log.Println("You can now start communication")
+	log.Printf("You can now start communication with client at network address: %v", connectionWithClient.RemoteAddr())
 	wg.Wait()
 
 }

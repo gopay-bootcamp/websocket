@@ -8,11 +8,14 @@ import (
 func main() {
 	listener, listenerErr := server.SetupListener("tcp", "localhost:49152")
 	if listenerErr == nil {
-		connectionWithClient, connectionWithClientErr := server.SetupConnection(listener)
-		if connectionWithClientErr != nil {
-			log.Println(connectionWithClientErr)
-			return
+		for {
+			connectionWithClient, connectionWithClientErr := server.SetupConnection(listener)
+			if connectionWithClientErr != nil {
+				log.Println(connectionWithClientErr)
+				return
+			}
+			defer connectionWithClient.Close()
+			go server.SetupReaderAndWriter(connectionWithClient)
 		}
-		server.SetupReaderAndWriter(connectionWithClient)
 	}
 }
